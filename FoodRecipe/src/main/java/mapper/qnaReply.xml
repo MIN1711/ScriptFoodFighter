@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qnaReply">
+
+	<!-- 댓글 조회 -->
+ 	<select id="getQnAReply" parameterType="hashMap" resultType="qnaReply.vo.QnAReplyVO">
+		SELECT Q_R_NO, MAN_COD, Q_R_CON, Q_R_DATE, Q_NO
+		FROM QA_REPLY
+		WHERE Q_NO = #{qNo}
+	</select> 
+	
+	<!-- 댓글 작성 -->
+ 	<insert id="insert" parameterType="qnaReply.vo.QnAReplyVO">
+		<selectKey resultType="int" keyProperty="qRNo" order="BEFORE">
+	    	SELECT Q_R_NO_SEQ.nextval from dual
+	    </selectKey>
+		INSERT INTO QA_REPLY (
+			Q_R_NO, MAN_COD, Q_R_CON, Q_R_DATE, Q_NO
+		) VALUES (
+			#{qRNo}, #{manCod}, #{qRCon}, SYSDATE, #{qNo}
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qna">
+
+	<resultMap type="qna.vo.QnAVO" id="qnaMap">
+		<result property="qNo" column="q_no"/>
+		<result property="qTitle" column="q_title"/>
+		<result property="qCon" column="q_con"/>
+		<result property="qDate" column="q_date"/>
+		<result property="cusId" column="cus_id"/>
+	</resultMap>
+
+	<!-- 작성 -->
+	<insert id="insert" parameterType="qna.vo.QnAVO">
+		<selectKey resultType="int" keyProperty="qNo" order="BEFORE">
+	    	SELECT Q_NO_SEQ.nextval from dual
+	    </selectKey>
+		insert into QA ( 
+			Q_NO, Q_TITLE, Q_CON, Q_DATE, CUS_ID	
+		)values (
+			#{qNo}, #{qTitle}, #{qCon}, SYSDATE, #{cusId}
+		)
+	</insert>
+
+	<!-- Q&A : update 불가-->
+
+	<!-- 전체 글 갯수 조회 -->
+	<select id="countList" resultType="int">
+		SELECT COUNT(*) FROM QA
+	</select>
+	
+	<!-- Q&A 목록 -->
+	<select id="qnaList" parameterType="map" resultType="qnaVO">
+		select a.* from
+		(select rownum as rnum, b.* from (select * from QA
+		order by Q_NO desc)b
+		<![CDATA[	where rownum <= #{end}) a
+			where a.rnum >= #{start}
+		]]>
+	</select>
+	
+	<!-- Q&A 상세 페이지 -->
+	<select id="getQno" resultMap="qnaMap">
+		SELECT  Q_NO, Q_TITLE, Q_CON, Q_DATE, CUS_ID
+		FROM QA
+		WHERE q_no = #{qNo}
+	</select>
+	
+	<!-- Q&A 글 삭제 -->
+	<delete id="delete">
+		delete from QA where Q_NO = #{qNo}
+	</delete>
+	
+	<!-- Q&A 댓글 삭제 -->
+	<delete id="deleteReply">
+		DELETE FROM QA_REPLY
+		WHERE Q_NO = #{qNo}
+	</delete>
+	
+	<!-- Q&A 댓글 존재 여부 체크 -->
+	<select id="chkReply" resultType="int">
+	  SELECT CASE WHEN EXISTS (
+	    SELECT 1 FROM QA_REPLY WHERE Q_NO = #{qNo}
+	  ) THEN 1 ELSE 0 END
+	  FROM DUAL
+	</select>
+	
+<!-- 		SELECT * from QA_REPLY -->
+<!-- 		WHERE Q_NO = #{qNo} -->
+	
+<!-- 	<select id="getCus" resultType="qna.vo.QnAVO"> -->
+<!-- 		SELECT * from QA -->
+<!-- 		WHERE CUS_ID = #{cusId} -->
+<!-- 	</select> -->
+
+	<!--조건 글 갯수 조회 -->
+<!-- 	<select id="countList" parameterType="brdVO" resultType="int"> -->
+<!-- 		SELECT COUNT(*) FROM BOARD WHERE 1=1 -->
+		
+<!-- 		<if test="qNo != null and qNo != ''"> -->
+<!-- 			AND Q_NO = #{qNo} -->
+<!-- 		</if> -->
+
+<!-- 		<if test="qTitle != null and qTitle != ''"> -->
+<!-- 			AND Q_TITLE = #{qTitle} -->
+<!-- 		</if> -->
+
+<!-- 		<if test="cusId != null and cusId!= ''"> -->
+<!-- 			AND CUS_ID = #{cusId} -->
+<!-- 		</if> -->
+<!-- 	</select> -->
+
+<!-- 	<select id="countList" parameterType="map" resultType="qnaVO"> -->
+<!--     SELECT a.* -->
+<!--     FROM (SELECT ROWNUM AS rnum, b.* -->
+<!--           FROM (SELECT Q_NO -->
+<!--                      , Q_TITLE -->
+<!--                      , TO_CHAR(Q_DATE, 'YYYY-MM-DD HH24:MI:SS') AS B_DATE -->
+<!--                      , CUS_ID -->
+<!--                      , Q_CONE -->
+<!--                 FROM QA -->
+<!--                 WHERE 1=1 -->
+<!--                 <if test="qNo != null and qNo != ''"> -->
+<!--                     AND Q_NO = #{qNo} -->
+<!--                 </if> -->
+<!--                 <if test="qTitle != null and qTitle != ''"> -->
+<!--                     AND Q_TITLE = #{qTitle} -->
+<!--                 </if> -->
+<!--                 <if test="cusId != null and cusId!= ''"> -->
+<!--                     AND CUS_ID = #{cusId} -->
+<!--                 </if> -->
+<!--                 ORDER BY B_DATE DESC -->
+<!--           ) b -->
+<!--           WHERE rownum &lt;= #{end} -->
+<!--         ) a -->
+<!--     WHERE a.rnum &gt;= #{start} -->
+<!-- </select> -->
+
+</mapper>

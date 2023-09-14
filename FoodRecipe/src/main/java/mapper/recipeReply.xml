@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recReply">
+
+	<select id="getRecipeReply" parameterType="hashMap"
+		resultType="recipeReply.vo.RecipeReplyVO">
+
+		select *
+		from r_reply
+		where r_no = #{rNo}
+		order by r_r_no DESC
+
+	</select>
+
+	<insert id="insert" parameterType="recipeReply.vo.RecipeReplyVO">
+		<selectKey resultType="int" keyProperty="rRNo"
+			order="BEFORE">
+			select r_r_no_seq.nextval from dual
+		</selectKey>
+		insert into r_reply(
+		r_r_no, r_r_con, r_r_date, cus_id, r_no
+		)
+		values(
+		#{rRNo}, #{rRCon}, SYSDATE, #{cusId}, #{rNo}
+		)
+
+	</insert>
+
+	<update id="update" parameterType="recipeReply.vo.RecipeReplyVO">
+
+		update r_reply
+		set
+		r_r_con = #{rRCon},
+		r_r_date = SYSDATE
+		where r_r_no = #{rRNo} and r_no = #{rNo}
+
+	</update>
+
+	<delete id="delete" parameterType="recipeReply.vo.RecipeReplyVO">
+
+		delete from r_reply
+		where r_r_no = #{rRNo} and r_no = #{rNo}
+
+	</delete>
+
+</mapper>

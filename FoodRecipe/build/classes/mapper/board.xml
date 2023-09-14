@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="brd">
+
+	<insert id="insert" parameterType="board.vo.BoardVO">
+		<selectKey resultType="int" keyProperty="bNo" order="BEFORE">
+	    	SELECT B_NO_SEQ.nextval from dual
+	    </selectKey>
+		insert into board ( 
+			B_NO, B_TITLE, CTG_NO, B_DATE, CUS_ID, B_CON
+		) values (
+			#{bNo}, #{bTitle}, #{ctgNo}, sysdate , #{cusId}, #{bCon}
+		)
+
+	</insert>
+
+	<update id="update" parameterType="board.vo.BoardVO">
+
+		update board
+		
+		set 
+		
+		b_title=#{bTitle}
+		,ctg_no =#{ctgNo}
+		,b_date = sysdate
+		,cus_id =#{cusId}
+		,b_con=#{bCon}
+		
+		where b_no = #{bNo}
+
+	</update>
+
+	<delete id="delete">
+
+		delete from board where b_no = #{bNo}
+
+	</delete>
+
+	<select id="getBno" resultType="board.vo.BoardVO">
+
+	select  b_no as bNo
+	,b_title as bTitle
+	,b_con as bCon
+	,b_date as bDate
+	,cus_id as cusId
+	,ctg_no as ctgNo
+
+	from board
+	where b_no =
+	#{bNo}
+
+	</select>
+	
+	<select id="getCtg" resultType="board.vo.BoardVO">
+
+	select * 
+	from board
+	where ctg_no = #{ctgNo}
+
+	</select>
+	
+	<select id="getCus" resultType="board.vo.BoardVO">
+
+	select * from board
+	where cus_id = #{cusId}
+
+	</select>
+
+	<resultMap type="board.vo.BoardVO" id="boardMap">
+		<result property="bNO" column="b_no" />
+		<result property="bTitle" column="b_title" />
+		<result property="bCon" column="b_con" />
+		<result property="cusId" column="cus_id" />
+		<result property="ctgNo" column="ctg_no" />
+	</resultMap>
+	
+	<!--조건 글 갯수 조회 -->
+	<select id="countList" parameterType="brdVO" resultType="int">
+
+		SELECT COUNT(*) FROM BOARD where 1=1
+		
+		<if test="bNo != null and bNo != ''">
+			and b_no = #{bNo}
+		</if>
+
+		<if test="bTitle != null and bTitle != ''">
+			and b_title = #{bTitle}
+		</if>
+
+		<if test="cusId != null and cusId!= ''">
+			and cus_id = #{cusId}
+		</if>
+
+		<if test="ctgNo != null and ctgNo != ''">
+			and ctg_no = #{ctgNo}
+		</if>
+		</select>
+
+    <select id="boardList" parameterType="map" resultType="brdVO">
+    SELECT a.*
+    FROM (SELECT ROWNUM AS rnum, b.*
+          FROM (SELECT b_no
+                     , b_title
+                     , TO_CHAR(b_date, 'YYYY-MM-DD HH24:MI:SS') AS b_date
+                     , cus_id
+                     , case when ctg_no = 1 then '레시피'
+						when ctg_no = 2 then '맛집'
+						when ctg_no = 3 then '자유게시판' end as ctgNo
+                     , b_con
+                FROM board
+                WHERE 1=1
+                <if test="bNo != null and bNo != ''">
+                    AND b_no = #{bNo}
+                </if>
+                <if test="bTitle != null and bTitle != ''">
+                    AND b_title = #{bTitle}
+                </if>
+                <if test="cusId != null and cusId!= ''">
+                    AND cus_id = #{cusId}
+                </if>
+                <if test="ctgNo != null and ctgNo != ''">
+                    AND ctg_no = #{ctgNo}
+                </if>
+                ORDER BY b_date DESC
+          ) b
+          WHERE rownum &lt;= #{end}
+        ) a
+    WHERE a.rnum &gt;= #{start}
+</select>
+
+	<!-- board 댓글 삭제 -->
+	<delete id="deleteReply">
+		DELETE FROM B_REPLY
+		WHERE b_NO = #{bNo}
+	</delete>
+
+	<!-- board 댓글 존재 여부 체크 -->
+	<select id="chkReply" resultType="int">
+	  SELECT CASE WHEN EXISTS (
+	    SELECT 1 FROM B_REPLY WHERE B_NO = #{bNo}
+	  ) THEN 1 ELSE 0 END
+	  FROM DUAL
+	</select>
+	
+	<!--board 추천 삭제  -->
+	<delete id="deleteLike" parameterType="recom.vo.RecomVO">
+
+    delete from rcmnd where b_no=#{bNo} 
+
+    </delete>
+    
+    <!-- board 추천 존재 여부 체크 -->
+	<select id="chkLike" resultType="int">
+	  SELECT CASE WHEN EXISTS (
+	    SELECT 1 FROM RCMND  WHERE B_NO = #{bNo}
+	  ) THEN 1 ELSE 0 END
+	  FROM DUAL
+	</select>
+    
+    
+</mapper>

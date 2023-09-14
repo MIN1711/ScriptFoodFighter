@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="orders">
+
+	<!-- getOrders -->
+	<select id="ordersById" parameterType="hashMap"
+		resultType="orders.vo.OrdersVO">
+		select * from orders where cus_id = #{cusId}
+	</select>
+
+	<insert id="insertOrder" parameterType="orders.vo.OrdersVO">
+
+		insert into orders
+		(o_no, cus_id, o_code, o_date, o_money)
+		values
+		(O_NO_SEQ.nextval, #{cusId},
+		#{oCode}, sysdate, #{oMoney})
+
+	</insert>
+
+	<!-- 관리자 주문 전체 조회 -->
+	<select id="AllOrders" parameterType="orders.vo.OrdersVO">
+
+		select * from orders
+
+	</select>
+
+	<delete id="deleteOrders">
+
+		delete from orders where cus_id = #{cusId} and o_no = #{oNo}
+
+	</delete>
+
+	<select id="ordersChk" parameterType="string" resultType="int">
+
+		select count(*) from orders
+		where cus_id = #{cusId} and o_code = 'N'
+
+	</select>
+
+	<select id="ordersNo" parameterType="string" resultType="int">
+
+		select max(o_no) from orders
+		where cus_id = #{cusId} and o_code = 'N'
+
+	</select>
+
+	<update id="updatemoney" parameterType="int">
+
+		update orders
+		set o_money = #{oMoney}
+		where o_no = #{oNo}
+
+	</update>
+
+	<select id="getmoney" parameterType="int" resultType="int">
+
+		select o_money from orders
+		where o_no = #{oNo}
+
+	</select>
+	
+	<select id="getcartlist" parameterType="int" resultType="orders.vo.CartVO">
+	
+		select * from cart where o_no = #{oNo}
+			
+	</select>
+	
+	<update id="cancel" parameterType="int">
+	
+		update orders
+		set o_code = 'C'
+		where o_no = #{oNo}
+	
+	</update>
+	
+	<select id="payorders" parameterType="int" resultType="orders.vo.OrdersVO">
+		
+		select * from orders where o_no = #{oNo}
+		
+	</select>
+	
+	<update id="orderpaid" parameterType="int">
+	
+		update orders
+		set o_code = 'Y'
+		where o_no = #{oNo}
+	
+	</update>
+	
+	<insert id="paySuccess" parameterType="orders.vo.PaymentVO">
+
+		insert into payment
+		(o_no, pay_date, pay_money, m_pay_code)
+		values
+		(#{oNo}, sysdate, #{payMoney}, #{mPayCode})
+
+	</insert>
+
+</mapper>

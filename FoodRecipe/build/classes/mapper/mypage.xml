@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mypage">
+
+<select id = "getId" resultType = "mypage.vo.MypageVO">
+SELECT b_no, b_title, b_con, b_date, ctg_no, cus_id
+FROM board
+WHERE cus_id = #{cusId}
+</select>
+
+<resultMap type="mpVO" id="mypgaeMap">
+		<result property="bNO" column="b_no" />
+		<result property="bTitle" column="b_title" />
+		<result property="bCon" column="b_con" />
+		<result property="cusId" column="cus_id" />
+		<result property="ctgNo" column="ctg_no" />
+	</resultMap>
+	
+<!--조건 글 갯수 조회 -->
+	<select id="countList" parameterType="mpVO" resultType="int">
+
+		SELECT COUNT(*) FROM BOARD where 1=1
+		
+		<if test="bNo != null and bNo != ''">
+			and b_no = #{bNo}
+		</if>
+
+		<if test="bTitle != null and bTitle != ''">
+			and b_title = #{bTitle}
+		</if>
+
+		<if test="cusId != null and cusId!= ''">
+			and cus_id = #{cusId}
+		</if>
+
+		<if test="ctgNo != null and ctgNo != ''">
+			and ctg_no = #{ctgNo}
+		</if>
+		</select>
+		
+
+
+<!-- 회원정보 수정,탈퇴시 비밀번호 확인 -->
+<select id="selectByPw" parameterType="String" resultType="string">
+select cus_pw from customer where cus_pw = #{cusPw}
+</select>
+
+
+<!-- 구매리스트 조회 -->
+<select id = "getOrders" resultType = "orders.vo.OrdersVO">
+SELECT o_no, o_Code, o_date, o_money, cus_id
+FROM orders
+WHERE cus_id = #{cusId}
+</select>
+
+<resultMap type="orders.vo.OrdersVO" id="mypgaeBuyMap">
+		<result property="oNO" column="o_no" />
+		<result property="oCode" column="o_code" />
+		<result property="oDate" column="o_date" />
+		<result property="oMoney" column="o_money" />
+		<result property="cusId" column="cus_id" />
+	</resultMap>
+	
+<!--조건 글 갯수 조회 -->
+	<select id="countList2" parameterType="orders.vo.OrdersVO" resultType="int">
+
+		SELECT COUNT(*) FROM orders where 1=1
+		
+		<if test="oNo != null and oNo != ''">
+			and o_no = #{oNo}
+		</if>
+
+		<if test="oCode != null and oCode != ''">
+			and o_Code = #{oCode}
+		</if>
+
+		<if test="cusId != null and cusId!= ''">
+			and cus_id = #{cusId}
+		</if>
+
+		<if test="oDate != null and oDate != ''">
+			and o_date = #{oDate}
+		</if>
+		
+		<if test="oMoney != null and oMoney != ''">
+			and o_Money = #{oMoney}
+		</if>
+		</select>
+
+<!-- 위시리스트조회 -->
+<select id="getWishList" resultType="wish.vo.WishVO">
+  SELECT w.r_no, r.r_menu, w.cus_id
+  FROM wishlist w
+  JOIN recipe r ON w.r_no = r.r_no
+  WHERE w.cus_id = #{cusId}
+</select>
+
+<resultMap type="wish.vo.WishVO" id="mypgaewishMap">
+		<result property="rNO" column="r_no" />
+		<result property="rMenu" column="r_menu" />
+		<result property="cusId" column="cus_id" />
+	</resultMap>
+
+<!--조건 글 갯수 조회 -->
+	<select id="countList3" parameterType="wish.vo.WishVO" resultType="int">
+
+		SELECT COUNT(*) FROM wishlist where 1=1
+		
+		<if test="rNo != null and rNo != ''">
+			and r_no = #{rNo}
+		</if>
+		
+		<if test="rMenu != null and rMenu != ''">
+			and r_menu = #{rMenu}
+		</if>
+		
+		<if test="cusId != null and cusId!= ''">
+			and cus_id = #{cusId}
+		</if>
+
+		</select>
+
+<!--조건 글 갯수 조회 -->
+	<select id="countList1" parameterType="mypage.vo.MyRecomVO" resultType="int">
+
+		SELECT COUNT(*) FROM category, board where 1=1
+		
+		<if test="ctgNo != null and ctgNo != ''">
+			and ctg_no = #{ctgNo}
+		</if>
+			
+		<if test="cusId != null and cusId!= ''">
+			and cus_id = #{cusId}
+		</if>
+		
+		<if test="bNo != null and bNo!= ''">
+			and b_no = #{bNo}
+		</if>
+		
+		<if test="bTitle != null and bTitle!= ''">
+			and b_title = #{bTitle}
+		</if>
+
+		<if test="bCon != null and bCon!= ''">
+			and b_con = #{bCon}
+		</if>
+		
+		<if test="bDate != null and bDate!= ''">
+			and b_date = #{bDate}
+		</if>
+		
+		</select>
+		
+		<resultMap type="mypage.vo.MyRecomVO" id="myRecomMap">
+		<result property="cusId" column="cus_id" />
+		<result property="ctgNo" column="ctg_no" />
+		<result property="bNo" column="b_no" />
+		<result property="bTitle" column="b_title" />
+		<result property="bCon" column="b_con" />
+		<result property="bDate" column="b_date" />
+		</resultMap>
+		
+		<select id = "getRecomList" resultType = "mypage.vo.MyRecomVO">
+		
+		SELECT b.b_no, b.b_title, b.b_date, b.cus_id, b.b_con, b.ctg_no
+		FROM rcmnd r
+		JOIN board b ON r.b_no = b.b_no
+		WHERE r.cus_id = #{cusId}
+		</select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rec">
+
+
+<select id="count" resultType="Integer" parameterType="recom.vo.RecomVO">
+
+select count(*) from rcmnd where cus_id = #{cusId} AND b_no = #{bNo}
+
+</select>
+
+<select id="check" resultType="Integer" parameterType="recom.vo.RecomVO">
+
+select from rcmnd where cus_id = #{cusId} AND b_no = #{bNo}
+
+</select>
+
+<insert id="insert"  parameterType="recom.vo.RecomVO">
+
+insert into rcmnd (
+cus_id, b_no
+)values(
+#{cusId},#{bNo}
+)
+
+</insert>
+
+<delete id="delete" parameterType="recom.vo.RecomVO">
+
+delete from rcmnd where cus_id=#{cusId} and b_no=#{bNo} 
+
+</delete>
+
+
+</mapper>

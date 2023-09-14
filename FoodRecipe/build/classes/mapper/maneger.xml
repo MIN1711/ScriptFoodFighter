@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="maneger">
+
+	<select id="customerAll" resultType="customer.vo.CustomerVO">
+
+		select * from customer
+
+	</select>
+
+
+<select id="ordersAll" resultType="orders.vo.OrdersVO">
+
+		select * from orders
+
+	</select>
+
+	<select id="noticeAll" resultType="notice.vo.NoticeVO">
+
+		select * from notice
+
+	</select>
+	
+	<select id="moneyAll" resultType="orders.vo.OrdersVO">
+
+		select sum(o_money) from orders 
+
+	</select>
+	
+	
+
+	<insert id="insert" parameterType="notice.vo.NoticeVO">
+
+		insert into notice
+		(n_no, n_con, n_date, man_code)
+		values
+		(#{nNo}, #{nCon}, SYSDATE, #{man_code})
+
+	</insert>
+
+	<delete id="delete">
+
+		delete from notice where n_no = #{nNo}
+
+	</delete>
+
+</mapper>
+

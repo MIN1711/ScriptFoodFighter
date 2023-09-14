@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="brdReply">
+
+	<!-- 댓글 조회 -->
+ 	<select id="getBoardReply" parameterType="hashMap" resultType="boardReply.vo.BoardReplyVO">
+		SELECT B_R_NO, B_R_CONT, B_R_DATE, CUS_ID, B_NO
+		FROM B_REPLY
+		WHERE B_NO = #{bNo}
+		ORDER BY B_R_NO DESC
+	</select> 
+	
+	<!-- 댓글 작성 -->
+ 	<insert id="insert" parameterType="boardReply.vo.BoardReplyVO">
+		<selectKey resultType="int" keyProperty="bRNo" order="BEFORE">
+	    	SELECT B_R_NO_SEQ.nextval from dual
+	    </selectKey>
+		INSERT INTO B_REPLY (
+			B_R_NO, B_R_CONT, B_R_DATE, CUS_ID, B_NO
+		) VALUES (
+			#{bRNo}, #{bRCont}, SYSDATE, #{cusId}, #{bNo}
+		)
+	</insert>
+
+	<!-- 댓글 삭제	 -->
+	<delete id="delete">
+		DELETE FROM B_REPLY
+		WHERE B_R_NO = #{bRNo} AND B_NO = #{bNo}
+	</delete>
+
+</mapper>

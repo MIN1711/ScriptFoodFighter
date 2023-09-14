@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wish">
+
+<select id="count" resultType="Integer" parameterType="wish.vo.WishVO">
+	SELECT COUNT(*) FROM WISHLIST 
+	WHERE CUS_ID = #{cusId} AND R_NO = #{rNo}
+</select>
+
+<select id="check" resultType="Integer" parameterType="wish.vo.WishVO">
+	SELECT FROM WISHLIST WHERE CUS_ID = #{cusId} AND R_NO = #{rNo}
+</select>
+
+<insert id="insert" parameterType="wish.vo.WishVO">
+	INSERT INTO WISHLIST( CUS_ID, R_NO ) 
+	VALUES ( #{cusId}, #{rNo} )
+</insert>
+
+<delete id="delete" parameterType="wish.vo.WishVO">
+	DELETE FROM WISHLIST WHERE CUS_ID = #{cusId} AND R_NO = #{rNo} 
+</delete>
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recipe">
+
+	<insert id="insert"
+		parameterType="recipe.vo.RecipeVO">
+		
+		insert into recipe
+		( r_no, r_menu, r_type, r_cal, r_img_s, r_img_r, r_dt, r_m1, r_mm1,
+		r_m2, r_mm2, r_m3, r_mm3, r_m4, r_mm4, r_m5, r_mm5, r_m6, r_mm6, r_tip)
+		values (
+		#{rNo}, #{rMenu}, #{rType}, #{rCal}, #{rImgS}, #{rImgL}, 
+		#{rDt}, #{rM1}, #{rMm1}, #{rM2}, #{rMm2}, #{rM3}, #{rMm3}, 
+		#{rM4}, #{rMm4}, #{rM5}, #{rMm5}, #{rM6}, #{rMm6}, #{rTip} )
+		
+		</insert>
+		
+		<update id="update"
+			parameterType="recipe.vo.RecipeVO">
+		
+		update recipe
+		set
+		r_no = #{rNo}, r_menu = #{rMenu}, 
+		r_type = #{rType}, r_cal = #{rCal}, 
+		r_img_s = #{rImgS}, r_img_r =  #{rImgL},
+		r_dt = #{rDt}, r_m1 = #{rM1}, 
+		r_mm1 = #{rMm1},r_m2 = #{rM2}, 
+		r_mm2 = #{rMm2}, r_m3 = #{rM3}, 
+		r_mm3 = #{rMm3}, r_m4 = #{rM4}, 
+		r_mm4 = #{rMm4}, r_m5 = #{rM5}, 
+		r_mm5 = #{rMm5}, r_m6 = #{rM6}, 
+		r_mm6 = #{rMm6}, r_tip =#{rTip}
+		
+		where
+		r_no = #{rNo}
+		
+		</update>
+
+		<delete id="delete">
+		
+			delete from recipe where r_no = #{rNo}
+		
+		</delete>
+		
+		<select id="getAll" resultType="recipe.vo.RecipeVO">
+		
+			select * from recipe
+		
+		</select>
+		
+		<select id="getType" resultType="recipe.vo.RecipeVO">
+
+			select * from recipe where r_type like '%' || #{rType} || '%'
+			
+		</select>
+
+		<select id="getMenu" resultType="recipe.vo.RecipeVO">
+
+			select * from recipe where r_menu like '%' || #{rMenu} || '%'
+			
+		</select>
+		
+		<select id="get"
+			resultType="recipe.vo.RecipeVO">
+			
+			select * from recipe
+			where r_no = #{rNo}
+				
+		</select>
+		
+		<select id="check" resultType="int">
+		
+			select count(*) as cnt
+			from recipe
+			where r_no = #{rNo}
+		
+		</select>
+		
+		<resultMap type="recipe.vo.RecipeVO" id="recipeMap">
+			<result property="rNo" column="r_no"/>
+			<result property="rType" column="r_type"/>
+			<result property="rMenu" column="r_menu"/>
+		</resultMap>
+		
+		<select id="recipeList" resultMap="recipeMap" parameterType="map">
+			
+			select r_No, r_menu, r_type, r_img_s from recipe where 1=1
+			
+			<if test="rMenu != null and rMenu != '' ">
+				and r_menu like '%' || #{rMenu} || '%'
+			</if>
+			<if test="rType != null and rType != '' ">
+				and r_type like '%' || #{rType} || '%'
+			</if>
+		
+		</select>
+		
+		<select id="getRMenu" parameterType="int" resultType="String">
+		
+			select r_menu from recipe
+			where r_no = #{rNo}
+		
+		</select>
+		
+<!-- 		<select id="recipeList" parameterType="map" resultType="reVO"> -->
+
+<!-- 		select a.* from -->
+<!-- 		(select rownum as rnum, b.* from (select * from recipe -->
+<!-- 		order by b_no desc)b -->
+<!-- 	<![CDATA[	where rownum <= #{end}) a -->
+<!-- 		where a.rnum >= #{start} -->
+<!-- ]]> -->
+<!-- 	</select> -->
+
+<!-- select r_menu from recipe where R_MENU like '%??%' -->
+
+<!-- select DISTINCT r_type from recipe -->
+
+<!-- select r_menu from recipe where R_TYPE = ? -->
+
+
+
+
+
+
+
+
+
+
+</mapper>

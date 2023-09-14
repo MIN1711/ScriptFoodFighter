@@ -1,0 +1,55 @@
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.slider {
+	width: 65%;
+	margin: 100px auto;
+}
+
+.slick-slide {
+	margin: 0px 20px;
+}
+
+.slick-slide img {
+	width: 100%;
+}
+.showbox img {
+	width: 180px;
+	height: 180px;
+}
+.btn-outline-primary{
+	width: 180px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.slick-slide button{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break:break-all
+}
+
+.slick-prev:before, .slick-next:before {
+	color: black;
+}
+
+.slick-slide {
+	transition: all ease-in-out .3s;
+	opacity: .2;
+}
+
+.slick-active {
+	opacity: 1;
+}
+
+.slick-current {
+	opacity: 1;
+}
+
