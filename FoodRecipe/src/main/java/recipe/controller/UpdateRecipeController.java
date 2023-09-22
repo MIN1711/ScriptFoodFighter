@@ -31,7 +31,7 @@ public class UpdateRecipeController extends HttpServlet{
 				"/WEB-INF/views/recipe/updateRe.jsp");
 				
 	}
-	
+	// 각 데이터 설정 및 수정
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
